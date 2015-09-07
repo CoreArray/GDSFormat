@@ -1,3 +1,5 @@
-# GDSFormat
+C/C++ interface to the GDS files
+=======
 
-C/C++ Interface to CoreArray Genomic Data Structure (GDS) Files
+[![Build Status](https://travis-ci.org/zhengxwen/cpp_gds.png)](https://travis-ci.org/zhengxwen/cpp_gds)
+
