@@ -8,7 +8,7 @@
 //
 // dRealGDS.h: Packed real number in GDS format
 //
-// Copyright (C) 2015    Xiuwen Zheng
+// Copyright (C) 2015-2016    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -29,7 +29,7 @@
  *	\file     dRealGDS.h
  *	\author   Xiuwen Zheng [zhengx@u.washington.edu]
  *	\version  1.1
- *	\date     2015
+ *	\date     2016
  *	\brief    Bit operators and classes of GDS format
  *	\details
 **/
@@ -63,7 +63,7 @@ namespace CoreArray
 
 		static const int trVal = COREARRAY_TR_PACKED_REAL;
 		static const unsigned BitOf = 8u;
-		static const bool isClass = false;
+		static const bool isPrimitive = true;
 		static const C_SVType SVType = svCustomFloat;
 
 		static const char *StreamName() { return "dPackedReal8"; }
@@ -85,7 +85,7 @@ namespace CoreArray
 
 		static const int trVal = COREARRAY_TR_PACKED_REAL;
 		static const unsigned BitOf = 16u;
-		static const bool isClass = false;
+		static const bool isPrimitive = true;
 		static const C_SVType SVType = svCustomFloat;
 
 		static const char *StreamName() { return "dPackedReal16"; }
@@ -107,7 +107,7 @@ namespace CoreArray
 
 		static const int trVal = COREARRAY_TR_PACKED_REAL;
 		static const unsigned BitOf = 32u;
-		static const bool isClass = false;
+		static const bool isPrimitive = true;
 		static const C_SVType SVType = svCustomFloat;
 
 		static const char *StreamName() { return "dPackedReal32"; }

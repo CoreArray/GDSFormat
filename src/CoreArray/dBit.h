@@ -8,7 +8,7 @@
 //
 // dBit.h: Integers with specific numbers of bits and bitwise operation
 //
-// Copyright (C) 2007-2015    Xiuwen Zheng
+// Copyright (C) 2007-2016    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -29,7 +29,7 @@
  *	\file     dBit.h
  *	\author   Xiuwen Zheng [zhengx@u.washington.edu]
  *	\version  1.0
- *	\date     2007 - 2015
+ *	\date     2007 - 2016
  *	\brief    Integers with specific number of bits and bitwise operation
  *	\details
 **/
@@ -307,7 +307,7 @@ namespace CoreArray
 
 		static const int trVal = COREARRAY_TR_BIT_INTEGER;
 		static const unsigned BitOf = bits;
-		static const bool isClass = false;
+		static const bool isPrimitive = false;
 		static const C_SVType SVType = TdTraits<int_type>::SVType;
 
 		static const char *StreamName()

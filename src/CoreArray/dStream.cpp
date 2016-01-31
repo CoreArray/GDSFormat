@@ -8,7 +8,7 @@
 //
 // dStream.cpp: Stream classes and functions
 //
-// Copyright (C) 2007-2015    Xiuwen Zheng
+// Copyright (C) 2007-2016    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -647,6 +647,11 @@ void CdRA_Write::DoneWriteBlock()
 		fBlockNum ++;
 		fHasInitWriteBlock = false;
 	}
+}
+
+void CdZRA_Deflate::CopyFrom(CdStream &Source, SIZE64 Pos, SIZE64 Count)
+{
+	CdStream::CopyFrom(Source, Pos, Count);
 }
 
 
@@ -1494,6 +1499,7 @@ CdLZ4RA_Deflate::CdLZ4RA_Deflate(CdStream &Dest, TLevel Level,
 	{
 	case clFast:
 		fLZ4Ptr = malloc(sizeof(LZ4_stream_t));
+		memset(fLZ4Ptr, 0, sizeof(LZ4_stream_t));
 		break;
 	case clDefault: case clMax:
 		fLZ4Ptr = LZ4_createStreamHC();
@@ -1691,7 +1697,7 @@ CdLZ4RA_Inflate::CdLZ4RA_Inflate(CdStream &Source):
 	InitReadStream();
 	_IdxRaw = 1;
 	fCurPosition = 0;
-	lz4_body.table[0] = 0;
+	memset(&lz4_body, 0, sizeof(lz4_body));
 	iRaw = CntRaw = 0;
 }
 
@@ -1750,7 +1756,7 @@ ssize_t CdLZ4RA_Inflate::Read(void *Buffer, ssize_t Count)
 			{
 				// go to the next block
 				if (NextBlock())
-					lz4_body.table[0] = 0;
+					memset(&lz4_body, 0, sizeof(lz4_body));
 				else
 					break;
 			} else if (b > fCB_UZSize)
@@ -1783,7 +1789,7 @@ SIZE64 CdLZ4RA_Inflate::Seek(SIZE64 Offset, TdSysSeekOrg Origin)
 	bool flag = SeekStream(Offset);
 	if (flag || (Offset < fCurPosition))
 	{
-		lz4_body.table[0] = 0;
+		memset(&lz4_body, 0, sizeof(lz4_body));
 		iRaw = CntRaw = 0;
 		fStreamPos = fCB_ZStart + SIZE_RA_BLOCK_HEADER;
 		fCurPosition = fCB_UZStart;

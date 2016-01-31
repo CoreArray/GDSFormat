@@ -8,7 +8,7 @@
 //
 // dFile.cpp: Functions and classes for CoreArray Genomic Data Structure (GDS)
 //
-// Copyright (C) 2007-2015    Xiuwen Zheng
+// Copyright (C) 2007-2016    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -418,7 +418,12 @@ void CdGDSObj::Synchronize()
 		SaveToBlockStream();
 }
 
-void CdGDSObj::GetOwnBlockStream(vector<const CdBlockStream*> &Out)
+void CdGDSObj::GetOwnBlockStream(vector<const CdBlockStream*> &Out) const
+{
+	Out.clear();
+}
+
+void CdGDSObj::GetOwnBlockStream(vector<CdStream*> &Out)
 {
 	Out.clear();
 }
@@ -2200,7 +2205,7 @@ void CdGDSStreamContainer::SetPackedMode(const char *Mode)
 				// copy
 				vAllocStream->SetPosition(0);
 				vAllocStream->SetSizeOnly(0);
-				vAllocStream->CopyFrom(*TmpStream);
+				vAllocStream->CopyFrom(*TmpStream, 0, -1);
 			}
 
 			vAllocStream->SetPosition(0);
@@ -2246,7 +2251,7 @@ void CdGDSStreamContainer::CloseWriter()
 	}
 }
 
-void CdGDSStreamContainer::CopyFrom(CdBufStream &Source, SIZE64 Count)
+void CdGDSStreamContainer::CopyFromBuf(CdBufStream &Source, SIZE64 Count)
 {
 	C_UInt8 Buffer[COREARRAY_STREAM_BUFFER];
 
@@ -2320,7 +2325,13 @@ void CdGDSStreamContainer::CopyTo(CdStream &Dest, SIZE64 Count)
 	}
 }
 
-void CdGDSStreamContainer::GetOwnBlockStream(vector<const CdBlockStream*> &Out)
+void CdGDSStreamContainer::GetOwnBlockStream(vector<const CdBlockStream*> &Out) const
+{
+	Out.clear();
+	if (vAllocStream) Out.push_back(vAllocStream);
+}
+
+void CdGDSStreamContainer::GetOwnBlockStream(vector<CdStream*> &Out)
 {
 	Out.clear();
 	if (vAllocStream) Out.push_back(vAllocStream);
@@ -2629,7 +2640,7 @@ void CdGDSFile::DuplicateFile(const UTF8String &fn, bool deep)
 			TdGDSPos sNext = 0;
 			BYTE_LE<CdStream>(*F) <<
 				sSize << sNext << fBlockList[i]->ID() << bSize;
-			F->CopyFrom(*fBlockList[i]);
+			F->CopyFrom(*fBlockList[i], 0, -1);
 		}
 	}
 }

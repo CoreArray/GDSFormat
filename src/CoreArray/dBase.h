@@ -8,7 +8,7 @@
 //
 // dBase.h: Fundamental classes for CoreArray library
 //
-// Copyright (C) 2007-2015    Xiuwen Zheng
+// Copyright (C) 2007-2016    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -29,7 +29,7 @@
  *	\file     dBase.h
  *	\author   Xiuwen Zheng [zhengx@u.washington.edu]
  *	\version  1.0
- *	\date     2007 - 2015
+ *	\date     2007 - 2016
  *	\brief    Basic classes for CoreArray library
  *	\details
 **/
@@ -593,9 +593,14 @@ namespace CoreArray
 		void W64b(C_UInt64 val);
 
 		/// Copy from a CdStream object
-		SIZE64 CopyFrom(CdStream &Source, SIZE64 Count=-1);
+		/** \param Source  a stream object
+		 *  \param Pos     the starting position
+		 *  \param Count   the number of bytes, -1 for all data starting from Pos
+		**/
+		virtual void CopyFrom(CdStream &Source, SIZE64 Pos, SIZE64 Count);
+
 		/// Copy from a CdBufStream object
-		SIZE64 CopyFrom(CdBufStream &Source, SIZE64 Count=-1);
+		void CopyFromBuf(CdBufStream &Source, SIZE64 Pos, SIZE64 Count);
 
 	private:
 		CdStream& operator= (const CdStream& m);
@@ -656,9 +661,9 @@ namespace CoreArray
 		void FlushWrite();
 
 		/// Copy from a CdStream object
-		void CopyFrom(CdStream &Source, SIZE64 Count=-1);
+		void CopyFrom(CdStream &Source, SIZE64 Pos, SIZE64 Count);
 		/// Copy from a CdBufStream object
-		void CopyFrom(CdBufStream &Source, SIZE64 Count=-1);
+		void CopyFromBuf(CdBufStream &Source, SIZE64 Pos, SIZE64 Count);
 		/// Truncate the stream
 		void Truncate();
 

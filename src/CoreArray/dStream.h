@@ -8,7 +8,7 @@
 //
 // dStream.h: Stream classes and functions
 //
-// Copyright (C) 2007-2015    Xiuwen Zheng
+// Copyright (C) 2007-2016    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -29,7 +29,7 @@
  *	\file     dStream.h
  *	\author   Xiuwen Zheng [zhengx@u.washington.edu]
  *	\version  1.0
- *	\date     2007 - 2015
+ *	\date     2007 - 2016
  *	\brief    Stream classes and functions
  *	\details
 **/
@@ -436,11 +436,17 @@ namespace CoreArray
 		protected CdRA_Write, public CdZDeflate
 	{
 	public:
-		CdZRA_Deflate(CdStream &Dest, TLevel Level,
-			TBlockSize BlockSize);
+		CdZRA_Deflate(CdStream &Dest, TLevel Level, TBlockSize BlockSize);
 
 		virtual ssize_t Write(const void *Buffer, ssize_t Count);
 		virtual void Close();
+
+		/// Copy from a CdStream object
+		/** \param Source  a stream object
+		 *  \param Pos     the starting position
+		 *  \param Count   the number of bytes, -1 for all data starting from Pos
+		**/
+		virtual void CopyFrom(CdStream &Source, SIZE64 Pos, SIZE64 Count);
 
 	protected:
 		ssize_t fBufferSize;
