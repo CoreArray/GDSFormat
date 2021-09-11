@@ -8,7 +8,7 @@
 //
 // dPlatform.cpp: Functions for independent platforms
 //
-// Copyright (C) 2007-2016    Xiuwen Zheng
+// Copyright (C) 2007-2018    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -577,44 +577,100 @@ double CoreArray::StrToFloatDef(char const* str, const double Default)
 // Integer <--> string
 // =========================================================================
 
-string CoreArray::IntToStr(const C_Int8 val)
+string CoreArray::IntToStr(C_Int8 val)
 {
-	return _FmtNum("%d", val);
+	char buf[8];
+	char *p = buf + sizeof(buf);
+	C_Int8 v = (val >= 0) ? val : -val;
+	do {
+		*(--p) = (v % 10) + '0';
+		v /= 10;
+	} while (v > 0);
+	if (val < 0) *(--p) = '-';
+	return string(p, sizeof(buf) - (p - buf));
 }
 
-string CoreArray::IntToStr(const C_UInt8 val)
+string CoreArray::IntToStr(C_UInt8 val)
 {
-	return _FmtNum("%d", val);
+	char buf[8];
+	char *p = buf + sizeof(buf);
+	do {
+		*(--p) = (val % 10u) + '0';
+		val /= 10u;
+	} while (val > 0);
+	return string(p, sizeof(buf) - (p - buf));
 }
 
-string CoreArray::IntToStr(const C_Int16 val)
+string CoreArray::IntToStr(C_Int16 val)
 {
-	return _FmtNum("%d", val);
+	char buf[8];
+	char *p = buf + sizeof(buf);
+	C_Int16 v = (val >= 0) ? val : -val;
+	do {
+		*(--p) = (v % 10) + '0';
+		v /= 10;
+	} while (v > 0);
+	if (val < 0) *(--p) = '-';
+	return string(p, sizeof(buf) - (p - buf));
 }
 
-string CoreArray::IntToStr(const C_UInt16 val)
+string CoreArray::IntToStr(C_UInt16 val)
 {
-	return _FmtNum("%d", val);
+	char buf[8];
+	char *p = buf + sizeof(buf);
+	do {
+		*(--p) = (val % 10u) + '0';
+		val /= 10u;
+	} while (val > 0);
+	return string(p, sizeof(buf) - (p - buf));
 }
 
-string CoreArray::IntToStr(const C_Int32 val)
+string CoreArray::IntToStr(C_Int32 val)
 {
-	return _FmtNum("%d", val);
+	char buf[16];
+	char *p = buf + sizeof(buf);
+	C_Int32 v = (val >= 0) ? val : -val;
+	do {
+		*(--p) = (v % 10) + '0';
+		v /= 10;
+	} while (v > 0);
+	if (val < 0) *(--p) = '-';
+	return string(p, sizeof(buf) - (p - buf));
 }
 
-string CoreArray::IntToStr(const C_UInt32 val)
+string CoreArray::IntToStr(C_UInt32 val)
 {
-	return _FmtNum("%u", val);
+	char buf[16];
+	char *p = buf + sizeof(buf);
+	do {
+		*(--p) = (val % 10u) + '0';
+		val /= 10u;
+	} while (val > 0);
+	return string(p, sizeof(buf) - (p - buf));
 }
 
-string CoreArray::IntToStr(const C_Int64 val)
+string CoreArray::IntToStr(C_Int64 val)
 {
-	return _FmtNum("%lld", val);
+	char buf[32];
+	char *p = buf + sizeof(buf);
+	C_Int64 v = (val >= 0) ? val : -val;
+	do {
+		*(--p) = (v % 10) + '0';
+		v /= 10;
+	} while (v > 0);
+	if (val < 0) *(--p) = '-';
+	return string(p, sizeof(buf) - (p - buf));
 }
 
-string CoreArray::IntToStr(const C_UInt64 val)
+string CoreArray::IntToStr(C_UInt64 val)
 {
-	return _FmtNum("%llu", val);
+	char buf[32];
+	char *p = buf + sizeof(buf);
+	do {
+		*(--p) = (val % 10u) + '0';
+		val /= 10u;
+	} while (val > 0);
+	return string(p, sizeof(buf) - (p - buf));
 }
 
 long CoreArray::StrToInt(char const* str)
@@ -1087,13 +1143,14 @@ TSysHandle CoreArray::SysOpenFile(char const* const AFileName,
 		return (H != INVALID_HANDLE_VALUE) ? H : NULL;
 	#else
 		TSysHandle H;
+		int flag = 0;
 		#ifdef O_LARGEFILE
-			int flag = O_LARGEFILE;
-		#else
-			int flag = 0;
+			flag |= O_LARGEFILE;
 		#endif
-		H = open(AFileName, flag | AccessMode[mode] |
-			ShareMode[smode]);
+		#ifdef O_CLOEXEC
+			flag |= O_CLOEXEC;
+		#endif
+		H = open(AFileName, flag | AccessMode[mode] | ShareMode[smode]);
 		return (H > 0) ? H : 0;
 	#endif
 }
@@ -1150,7 +1207,7 @@ C_Int64 CoreArray::SysHandleSeek(TSysHandle Handle, C_Int64 Offset,
 		else
 			return p;
 	#else
-		#if defined(COREARRAY_CYGWIN) || defined(COREARRAY_PLATFORM_MACOS)
+		#if defined(COREARRAY_CYGWIN) || defined(COREARRAY_PLATFORM_MACOS) || defined(COREARRAY_PLATFORM_BSD)
 			return lseek(Handle, Offset, sk);
 		#else
 			return lseek64(Handle, Offset, sk);
@@ -1166,7 +1223,7 @@ bool CoreArray::SysHandleSetSize(TSysHandle Handle, C_Int64 NewSize)
 		else
 			return false;
 	#else
-		#if defined(COREARRAY_CYGWIN) || defined(COREARRAY_PLATFORM_MACOS)
+		#if defined(COREARRAY_CYGWIN) || defined(COREARRAY_PLATFORM_MACOS) || defined(COREARRAY_PLATFORM_BSD)
 			return ftruncate(Handle, NewSize)==0;
 		#else
 			return ftruncate64(Handle, NewSize)==0;
@@ -1513,15 +1570,9 @@ CdThreadMutex::CdThreadMutex()
 CdThreadMutex::~CdThreadMutex()
 {
 #if defined(COREARRAY_POSIX_THREAD)
-
-	int v = pthread_mutex_destroy(&mutex);
-	if (v != 0)
-		throw ErrOSError(ERR_PTHREAD, "pthread_mutex_destroy", v);
-
+	pthread_mutex_destroy(&mutex);
 #elif defined(COREARRAY_PLATFORM_WINDOWS)
-
 	DeleteCriticalSection(&mutex);
-
 #endif
 }
 
@@ -1818,7 +1869,7 @@ CdThread::CdThread(TdThreadProc proc, void *Data)
 	_BeginThread();
 }
 
-CdThread::~CdThread()
+CdThread::~CdThread() COREARRAY_NOEXCEPT_FALSE
 {
 	try {
 		Terminate();
@@ -1918,6 +1969,10 @@ int CdThread::RunThreadSafe()
 	}
 	catch (exception &E) {
     	fErrorInfo = E.what();
+		fExitCode = -1;
+	}
+	catch (const char *E) {
+		fErrorInfo = E;
 		fExitCode = -1;
 	}
 	catch (...) {

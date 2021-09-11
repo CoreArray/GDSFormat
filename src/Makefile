@@ -19,13 +19,13 @@
 CC = gcc
 
 ## Debugging and optimization options for the C compiler.
-CFLAGS = -O2
+CFLAGS = -O2 -DCOREARRAY_NO_LZMA
 
 ## The command which runs the C++ compiler.
 CXX = g++
 
 ## Options for the C++ compiler.
-CXXFLAGS = -O2
+CXXFLAGS = -O2 -DCOREARRAY_NO_LZMA
 
 ## Copy files
 CP = cp -f
@@ -152,14 +152,26 @@ dParallel_Ext.o:
 dPlatform.o:
 	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dPlatform.cpp -c -o $@
 
+dRealGDS.o:
+	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dRealGDS.cpp -c -o $@
+
 dSerial.o:
 	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dSerial.cpp -c -o $@
+
+dStrGDS.o:
+	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dStrGDS.cpp -c -o $@
 
 dStream.o:
 	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dStream.cpp -c -o $@
 
 dStruct.o:
 	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dStruct.cpp -c -o $@
+
+dVLIntGDS.o:
+	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dVLIntGDS.cpp -c -o $@
+
+dSparse.o:
+	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dSparse.cpp -c -o $@
 
 
 ##  ZLIB Library  ##

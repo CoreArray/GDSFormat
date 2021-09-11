@@ -8,7 +8,7 @@
 //
 // CoreArray.h: CoreArray interface
 //
-// Copyright (C) 2007-2016    Xiuwen Zheng
+// Copyright (C) 2007-2018    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -27,9 +27,9 @@
 
 /**
  *	\file     CoreArray.h
- *	\author   Xiuwen Zheng [zhengx@u.washington.edu]
+ *	\author   Xiuwen Zheng [zhengxwen@gmail.com]
  *	\version  1.0
- *	\date     2007 - 2016
+ *	\date     2007 - 2018
  *	\brief    CoreArray interface
  *	\details
 **/
@@ -53,6 +53,8 @@
 #include "dRealGDS.h"
 #include "dBitGDS.h"
 #include "dStrGDS.h"
+#include "dVLIntGDS.h"
+#include "dSparse.h"
 
 
 namespace CoreArray

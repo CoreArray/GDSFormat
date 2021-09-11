@@ -8,7 +8,7 @@
 //
 // dEndian.h: Cross-platform functions with independent endianness
 //
-// Copyright (C) 2007-2016    Xiuwen Zheng
+// Copyright (C) 2007-2017    Xiuwen Zheng
 //
 // This file is part of CoreArray.
 //
@@ -27,9 +27,9 @@
 
 /**
  *	\file     dEndian.h
- *	\author   Xiuwen Zheng [zhengx@u.washington.edu]
+ *	\author   Xiuwen Zheng [zhengxwen@gmail.com]
  *	\version  1.0
- *	\date     2016
+ *	\date     2007-2017
  *	\brief    Endianness-independent functions
  *	\details
 **/
