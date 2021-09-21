@@ -19,13 +19,13 @@
 CC = gcc
 
 ## Debugging and optimization options for the C compiler.
-CFLAGS = -O2 -DCOREARRAY_NO_LZMA
+CFLAGS = -O2
 
 ## The command which runs the C++ compiler.
 CXX = g++
 
 ## Options for the C++ compiler.
-CXXFLAGS = -O2 -DCOREARRAY_NO_LZMA
+CXXFLAGS = -O2
 
 ## Copy files
 CP = cp -f
@@ -59,8 +59,9 @@ INC_COREARRAY = -I../include
 LIB_ZIP_A = ../lib/libZLIB.a
 
 ## ZLIB library object files
-LIB_ZLIB_OBJS = adler32.o compress.o crc32.o deflate.o infback.o \
-	inffast.o inflate.o inftrees.o trees.o uncompr.o zutil.o
+LIB_ZLIB_OBJS = \
+	adler32.o compress.o crc32.o deflate.o infback.o inffast.o inflate.o \
+	inftrees.o trees.o uncompr.o zutil.o
 
 
 ## lz4 library
@@ -84,7 +85,7 @@ LIB_GENOGDS_OBJS = GenoGDS.o
 
 ##  all jobs
 
-all: $(LIB_COREARRAY_A) $(LIB_ZIP_A) $(LIB_LZ4_A) $(LIB_GENOGDS_A)
+all: $(LIB_COREARRAY_A) $(LIB_ZIP_A) $(LIB_LZ4_A) $(LIB_XZ_A) $(LIB_GENOGDS_A)
 	
 ##  Clean and remove files
 
@@ -94,6 +95,7 @@ clean:
 	$(RM) CoreArray/*.o
 	$(RM) ZLIB/*.o
 	$(RM) LZ4/*.o
+	$(RM) XZ/xz-5.2.5
 	$(RM) GenoGDS/*.o
 
 
@@ -115,6 +117,18 @@ $(LIB_LZ4_A): $(LIB_LZ4_OBJS)
 	$(MKDIR) ../lib
 	$(RM) $(LIB_LZ4_A)
 	$(AR) -r $(LIB_LZ4_A) $(LIB_LZ4_OBJS)
+
+## xz library archives
+$(LIB_XZ_A):
+	cd XZ && tar -xzf xz-5.2.5.tar.gz
+	cd XZ/xz-5.2.5 && \
+		./configure CC="${CC}" CPP="${CPP}" CXX="${CXX}" CXXCPP="${CXXCPP}" \
+		--with-pic --enable-silent-rules --quiet --disable-xz > /dev/null
+	cd XZ/xz-5.2.5/src/liblzma && make
+	cp XZ/xz-5.2.5/src/liblzma/.libs/liblzma.a  ../lib/liblzma.a
+	rm -rf XZ/xz-5.2.5/dos
+	rm -rf XZ/xz-5.2.5/po
+
 
 ## GenoGDS library archives
 $(LIB_GENOGDS_A): $(LIB_GENOGDS_OBJS)
