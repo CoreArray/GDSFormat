@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.1.2 (2021-09-20)
+========
+
+* update according to gdsfmt_v1.28.0
+
+
 CHANGES IN VERSION 1.1.1
 ========
 

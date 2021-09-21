@@ -45,9 +45,11 @@ AR = ar
 LIB_COREARRAY_A = ../lib/libCoreArray.a
 
 ## CoreArray library object files
-LIB_CORE_OBJS = CoreArray.o dAllocator.o dAny.o dBase.o dBitGDS.o \
-	dEndian.o dFile.o dParallel.o dParallel_Ext.o dPlatform.o dSerial.o \
-	dStream.o dStruct.o
+LIB_CORE_OBJS = \
+	CoreArray.o dAllocator.o dAny.o dBase.o dBitGDS.o dEndian.o dFile.o \
+	dParallel.o dParallel_Ext.o dPlatform.o dRealGDS.o dSerial.o \
+	dStrGDS.o dStream.o dStruct.o dSparse.o dVLIntGDS.o
+
 
 ## CoreArray header files
 INC_COREARRAY = -I../include
@@ -66,6 +68,11 @@ LIB_LZ4_A = ../lib/libLZ4.a
 
 ## LZ4 library object files
 LIB_LZ4_OBJS = lz4.o lz4hc.o lz4frame.o xxhash.o
+
+
+## xz library
+LIB_XZ_A = ../lib/liblzma.a
+
 
 
 ## lz4 library
@@ -167,11 +174,11 @@ dStream.o:
 dStruct.o:
 	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dStruct.cpp -c -o $@
 
-dVLIntGDS.o:
-	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dVLIntGDS.cpp -c -o $@
-
 dSparse.o:
 	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dSparse.cpp -c -o $@
+
+dVLIntGDS.o:
+	$(CXX) $(CXXFLAGS) $(INC_COREARRAY) CoreArray/dVLIntGDS.cpp -c -o $@
 
 
 ##  ZLIB Library  ##
